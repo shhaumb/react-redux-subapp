@@ -1,0 +1,34 @@
+{
+  "name": "react-redux-subapp",
+  "version": "1.0.1",
+  "description": "Create pluggable sub applications for React & Redux.",
+  "main": "lib/index.js",
+  "scripts": {
+    "dist": "babel src --out-dir lib --copy-files",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "rm -rf lib && npm run dist"
+  },
+  "author": "Shubham Jain",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "react": "^15.6.2",
+    "redux": "^3.7.2",
+    "yargs": "^9.0.1"
+  },
+  "peerDependencies": {
+    "react": "^15.3.0",
+    "redux": "^3.6.0"
+  },
+  "dependencies": {
+    "hoist-non-react-statics": "^2.3.1",
+    "prop-types": "^15.5.7",
+    "redux-subspace": "^2.0.6",
+    "redux-transient": "^0.1.2"
+  }
+}

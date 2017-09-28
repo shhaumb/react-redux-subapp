@@ -1,0 +1,90 @@
+{
+    "extends": [
+        "airbnb",
+        "plugin:import/warnings",
+        "plugin:import/errors"
+    ],
+    "rules": {
+        "max-len":[2, {"code": 120}],
+        "jsx-a11y/anchor-has-content": "off",
+        "jsx-quotes": ["error", "prefer-single"],
+        "prefer-rest-params": 0,
+        "no-underscore-dangle": 0,
+        "class-methods-use-this": 0,
+        "indent": [2, 2],
+        "react/jsx-indent": [2, 2],
+        "react/jsx-indent-props": [2, 2],
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react/no-multi-comp": 0,
+        "react/prefer-stateless-function": 0,
+        "import/no-unresolved": [2, {commonjs: true, amd: true}],
+        "import/no-extraneous-dependencies": 1,
+        "import/extensions": 0,
+        "import/named": 0,
+        "import/namespace": 2,
+        "import/default": 2,
+        "import/export": 2,
+        "import/no-duplicates": 2,
+        "import/prefer-default-export": 0,
+        "no-console": [
+            "warn",
+            {
+                "allow": ["warn", "error", "info"]
+            }
+        ],
+        // ES6 rules.
+        "arrow-spacing": 2,
+        "computed-property-spacing": 2,
+        "constructor-super": 2,
+        "no-const-assign": 2,
+        "no-this-before-super": 2,
+        "no-var": 2,
+        "prefer-const": 2,
+        "prefer-spread": 2,
+        "react/sort-comp": [2, {
+            "order": [
+                "type-annotations",
+                "constructor",
+                "static-methods",
+                "lifecycle",
+                "everything-else",
+                "render"
+            ]
+        }]
+    },
+
+    "ecmaFeatures": {
+        "arrowFunctions": true,
+        "blockBindings": true,
+        "classes": true,
+        "destructuring": true,
+        "experimentalObjectRestSpread": true,
+        "forOf": true,
+        "jsx": true,
+        "restParams": true,
+        "spread": true,
+        "templateStrings": true
+    },
+    "plugins": [
+        "react",
+        "import"
+    ],
+    "parser": "babel-eslint",
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "globals": {
+        "document": false
+    },
+    "settings": {
+        "ecmascript": 6,
+        "jsx": true,
+        "import/resolver": {
+            "webpack": {
+                "config": "webpack.config.js",
+                "config-index": 0
+            }
+        }
+    },
+}
