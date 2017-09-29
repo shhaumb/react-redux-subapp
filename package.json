@@ -1,6 +1,6 @@
 {
   "name": "react-redux-subapp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Create pluggable sub applications for React & Redux.",
   "main": "lib/index.js",
   "scripts": {
@@ -22,8 +22,8 @@
     "yargs": "^9.0.1"
   },
   "peerDependencies": {
-    "react": "^15.3.0",
-    "redux": "^3.6.0"
+    "react": ">=15.3.0",
+    "redux": ">=3.6.0"
   },
   "dependencies": {
     "hoist-non-react-statics": "^2.3.1",
