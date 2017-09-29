@@ -21,17 +21,21 @@ const subAppCreator = (subAppKey, WrappedComponent, reducer) => {
 
   class SubApp extends React.Component {
     getChildContext() {
+      return {
+        store: subspace((state => state[subAppKey]), subAppKey)(this.getStore()),
+      };
+    }
+    componentWillMount() {
+      const store = this.getStore();
+      store.dispatch(addReducer(reducer));
+      store.dispatch(initializeReducer());
+    }
+    getStore() {
       let store = this.context.store;
       if (store.rootStore) {
         store = store.rootStore;
       }
-
-      store.dispatch(addReducer(reducer));
-      store.dispatch(initializeReducer());
-
-      return {
-        store: subspace((state => state[subAppKey]), subAppKey)(store),
-      };
+      return store;
     }
     render() {
       return <WrappedComponent {...this.props} />;
