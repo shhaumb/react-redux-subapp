@@ -1,6 +1,6 @@
 {
   "name": "react-redux-subapp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Create pluggable sub applications for React & Redux.",
   "main": "lib/index.js",
   "scripts": {
@@ -10,6 +10,12 @@
   },
   "author": "Shubham Jain",
   "license": "MIT",
+  "dependencies": {
+    "hoist-non-react-statics": "^2.3.1",
+    "prop-types": "^15.5.7",
+    "redux-subspace": "^2.0.6",
+    "redux-transient": "^0.1.2"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
@@ -25,10 +31,8 @@
     "react": ">=15.3.0",
     "redux": ">=3.6.0"
   },
-  "dependencies": {
-    "hoist-non-react-statics": "^2.3.1",
-    "prop-types": "^15.5.7",
-    "redux-subspace": "^2.0.6",
-    "redux-transient": "^0.1.2"
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/shhaumb/react-redux-subapp"
   }
 }

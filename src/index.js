@@ -66,8 +66,21 @@ const refined = (subAppKey, reducer, initialState) => (state, action) => {
   };
 };
 
+const mapping = {};
+
 export const createAppFactory = (WrappedComponent, reducer, initialState) => (subAppKey) => {
+  if (subAppKey in mapping) {
+    if (mapping[subAppKey].wrapped === WrappedComponent) {
+      return mapping[subAppKey].subApp;
+    }
+    throw new Error(`store's key=${subAppKey} is already mapped with another component ${mapping[subAppKey].wrapped}`);
+  }
   const namespacedReducer = namespaced(subAppKey)(reducer);
   const refinedReducer = refined(subAppKey, namespacedReducer, initialState);
-  return subAppCreator(subAppKey, WrappedComponent, refinedReducer);
+  const subApp = subAppCreator(subAppKey, WrappedComponent, refinedReducer);
+  mapping[subAppKey] = {
+    wrapped: WrappedComponent,
+    subApp,
+  };
+  return subApp;
 };
