@@ -187,7 +187,7 @@ E.g.
 
 ```
 import { enhancer } from 'react-redux-subapp';
-const store = createStore((state => state), {}, enhancer);
+const store = createStore(parentReducer, initialState, enhancer);
 ```
 
 If you are using other enhancers or applyMiddleware, then compose the enhancers into one.
@@ -198,7 +198,7 @@ import { enhancer as subAppEnhancer } from 'react-redux-subapp';
 
 const applyEnhancer = applyMiddleware(middleware1, middleware2);
 const enhancer = compose(subAppEnhancer, applyEnhancer);
-const store = createStore((state => state), {}, enhancer);
+const store = createStore(parentReducer, initialState, enhancer);
 ```
 
 ## Anti-patterns
