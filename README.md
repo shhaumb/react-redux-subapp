@@ -1,5 +1,6 @@
 # react-redux-subapp
-Create pluggable React/Redux sub-applications using it.
+
+Create pluggable React/Redux sub-applications.
 
 ## Why?
 
@@ -29,7 +30,9 @@ Sub-application don't need to worry about it.
 
 ## Install
 
+```
 npm install -S react-redux-subapp
+```
 
 ## Getting started
 
@@ -86,7 +89,8 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export const Counter = connect(mapStateToProps, mapDispatchToProps)(CounterView);
+export const Counter = connect(mapStateToProps, mapDispatchToProps)(
+                        CounterView);
 ```
 
 #### (index.js)
@@ -101,7 +105,8 @@ import reducer from './reducer';
 export const counterAppFactory = createAppFactory(
     Counter, reducer, initialState);
     
-// Specifying the subAppKey='counter' where the counter's state would be located in main redux store.
+// Specifying the subAppKey='counter' where the counter's
+// state would be located in main redux store.
 export const CounterApp = counterAppFactory('counter');
 ```
 
@@ -110,7 +115,9 @@ export const CounterApp = counterAppFactory('counter');
 The parent app just need to put the enhancer provided by `react-redux-subapp` while creating store.
 Then it can use the `CounterApp` as component.
 
-``` Parent app's index.js
+#### Parent app's index.js
+
+```
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -153,13 +160,17 @@ This package provides two functions:
 
 Creates app factory provided component, reducer and initialState (optional).
 If initialState is not provided then reducer must have it as default argument against `state` parameter.
+
 ```
 const appFactory = createAppFactory(Component, reducer, initialState);
 ```
+
 Which again is used to create App instances by providing the `subAppKey` as argument.
+
 ```
 const ComponentApp = appFactory(subAppKey);
 ```
+
 Currently the `subAppKey` is just a string.
 
 The ComponentApp can be used as a component while rendering.
@@ -169,13 +180,18 @@ where to keep their state in global redux store.
 
 
 #### 2) `enhancer`
+
 Put it as a third argument while creating Redux store in parent app.
+
 E.g.
+
 ```
 import { enhancer } from 'react-redux-subapp';
 const store = createStore((state => state), {}, enhancer);
 ```
+
 If you are using other enhancers or applyMiddleware, then compose the enhancers into one.
+
 ```
 import { createStore, applyMiddleware, compose } from 'redux';
 import { enhancer as subAppEnhancer } from 'react-redux-subapp';
@@ -194,6 +210,13 @@ so that it can take some unique identifier prop from parent and use a part of it
 given identifier.
 
 Creating mutiple ComponentApp (dynamically) will cause a long chain of reducers, which can slow down your app.
+
+## Acknowledgement
+
+This package is made using two awesome packages [redux-subspace](https://github.com/ioof-holdings/redux-subspace)
+and [redux-transient](https://github.com/lucasconstantino/redux-transient).
+So features like isolated sub states and dynamic reducers are inherently provided by these packages.
+This package is providing a React binding for it.
 
 ## Licence
 MIT
