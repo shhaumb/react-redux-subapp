@@ -6,7 +6,7 @@ Create pluggable React/Redux sub-applications.
 
 When we have to use a React/Redux sub-application inside another React/Redux application,
 there are multiple entrypoints inside sub-application (i.e. component, reducer, initial-state)
-which need to composed by parent application.
+which need to be composed by parent application.
 It breaks the single place composibility nature provided by vanilla React architecture.
 Also, this situation complicates if we want to dynamically import the sub-application's module (for code splitting purpose)
 because reducer provided by sub-application needs be added dynamically to make it work.
