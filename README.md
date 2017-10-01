@@ -20,11 +20,11 @@ yet acheive state isolation. Let there be only single source of truth.
 
 1) Provide single entrypoint for sub-application. Just use the component inside parent application.
 Associated reducer and initial-state are taken care of automatically.
-2) Isolate state access for sub-application. Sub-application don't get access to parent store's whole state
+2) Isolate state access for sub-application. Sub-application doesn't get access to parent store's whole state
 in both reducer and `mapStateToProps` function.
 3) In case of code splitting (dynamic imports), reducer is added dynamically to parent application.
 4) The location of sub-application's redux state inside main store is decided by the parent application.
-Sub-application don't need to worry about it.
+Sub-application doesn't need to worry about it.
 5) Parent app can use multiple isolated instances of sub-application at different places.
 
 
