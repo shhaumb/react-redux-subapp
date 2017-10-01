@@ -7,7 +7,7 @@ Create pluggable React/Redux sub-applications.
 When we have to use a React/Redux sub-application inside another React/Redux application,
 there are multiple entrypoints inside sub-application (i.e. component, reducer, initial-state)
 which need to composed by parent application.
-It breaks the fractal nature provided by vanilla React architecture.
+It breaks the single place composibility nature provided by vanilla React architecture.
 Also, this situation complicates if we want to dynamically import the sub-application's module (for code splitting purpose)
 because reducer provided by sub-application needs be added dynamically to make it work.
 This package mitigates these problems.
@@ -154,7 +154,7 @@ It used the `counter` key in main redux store because it was specified while cre
 
 
 ## Reference
-This package provides two functions:
+This package provides two objects:
 
 #### 1) `createAppFactory(component, reducer, [initialState])`
 
