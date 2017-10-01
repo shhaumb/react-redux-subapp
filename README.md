@@ -203,7 +203,7 @@ const store = createStore((state => state), {}, enhancer);
 
 ## Anti-patterns
 
-Don't create mutiple instances of ComponentApp from appFactory just because you need to render those
+Don't create mutiple ComponentApp objects from appFactory just because you need to render those
 in different components. The single ComponentApp created can be rendered anywhere. So it is advised to create
 sub-application's ComponentApp statically inside parent app and use it everywhere. Design sub-application's component
 so that it can take some unique identifier prop from parent and use a part of its own sub-state for
