@@ -1,6 +1,6 @@
 {
   "name": "react-redux-subapp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Create pluggable sub applications for React & Redux.",
   "main": "lib/index.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "redux": ">=3.6.0"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/shhaumb/react-redux-subapp"
+    "type": "git",
+    "url": "https://github.com/shhaumb/react-redux-subapp"
   }
 }
