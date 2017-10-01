@@ -17,8 +17,8 @@ yet acheive state isolation. Let there be only single source of truth.
 
 ## Features
 
-1) Provide single entrypoint for sub-application. Just use the component inside parent application;
-associated reducer and initial-state are taken care of automatically.
+1) Provide single entrypoint for sub-application. Just use the component inside parent application.
+Associated reducer and initial-state are taken care of automatically.
 2) Isolate state access for sub-application. Sub-application don't get access to parent store's whole state
 in both reducer and `mapStateToProps` function.
 3) In case of code splitting (dynamic imports), reducer is added dynamically to parent application.
@@ -164,7 +164,7 @@ Currently the `subAppKey` is just a string.
 
 The ComponentApp can be used as a component while rendering.
 
-The parent app can also create instances of appFactory in its own code according to its need to
+The parent app can also create single/mutiple ComponentApp from appFactory in its own code according to its need to
 where to keep their state in global redux store.
 
 
