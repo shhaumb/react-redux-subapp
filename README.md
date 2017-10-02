@@ -201,6 +201,75 @@ const enhancer = compose(subAppEnhancer, applyEnhancer);
 const store = createStore(parentReducer, initialState, enhancer);
 ```
 
+## An example of dynamic imports
+
+** parent app's index.js **
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+
+import { enhancer } from 'react-redux-subapp';
+
+
+const store = createStore((state => state), {}, enhancer);
+
+class CounterApps extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      CounterApp1: null,
+      CounterApp2: null,
+    };
+  }
+  componentDidMount() {
+    if (this.state.CounterApp1 === null) {
+      import('counter-app').then(({ counterAppFactory }) => {
+        this.setState({
+          CounterApp1: counterAppFactory('counter1'),
+          CounterApp2: counterAppFactory('counter2'),
+        });
+      }).catch((error) => {/* Module loading failed */});
+    }
+  }
+  render() {
+    const { CounterApp1, CounterApp2 } = this.state;
+    if (CounterApp1 === null) {
+      return null;
+    }
+    return (
+      <div>
+        <CounterApp1 />
+        <CounterApp2 />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render((
+  <Provider store={store}>
+    <CounterApps />
+  </Provider>
+), document.getElementById('root'));
+```
+
+The CounterApp1 and CounterApp2 created above will behave isolately.
+Action dispatched from one component will be caught by the reducer of that component only.
+The store's state after components mount will look like:
+
+```
+{
+    counter1: {
+        value: 0,
+    },
+    counter2: {
+        value: 0,
+    }
+}
+```
+
 ## Anti-patterns
 
 Don't create mutiple ComponentApp objects from appFactory just because you need to render those
