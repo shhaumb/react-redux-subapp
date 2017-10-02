@@ -201,9 +201,9 @@ const enhancer = compose(subAppEnhancer, applyEnhancer);
 const store = createStore(parentReducer, initialState, enhancer);
 ```
 
-## An example of dynamic imports
+## An example of dynamic import
 
-** parent app's index.js **
+**parent app's index.js**
 ```
 import React from 'react';
 import ReactDOM from 'react-dom';
