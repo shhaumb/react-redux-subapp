@@ -2,10 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import hoistStatics from 'hoist-non-react-statics';
 import { subspace, namespaced } from 'redux-subspace';
+import { subspaced } from 'redux-subspace-saga';
 import { addReducer } from 'redux-transient';
 
-export { enhancer } from 'redux-transient';
+import { subAppEnhancer } from './enhancer';
 
+export { subAppEnhancer } from './enhancer';
+
+// Depricated
+export const enhancer = subAppEnhancer;
 
 const ACTION_INITIALIZE_REDUCER_TYPE = '@react-redux-subapp/INIT';
 
@@ -13,7 +18,20 @@ const initializeReducer = () => ({
   type: ACTION_INITIALIZE_REDUCER_TYPE,
 });
 
-const subAppCreator = (subAppKey, WrappedComponent, reducer) => {
+const sagaRunForSubAppKeyMap = {};
+
+const mapState = subAppKey => (state) => {
+  let subState = state;
+  const keys = subAppKey.split('.');
+  keys.forEach((key) => {
+    if (subState !== undefined) {
+      subState = subState[key];
+    }
+  });
+  return subState;
+};
+
+const subAppCreator = (subAppKey, WrappedComponent, reducer, options) => {
   const wrappedComponentName = WrappedComponent.displayName
     || WrappedComponent.name
     || 'Component';
@@ -22,13 +40,18 @@ const subAppCreator = (subAppKey, WrappedComponent, reducer) => {
   class SubApp extends React.Component {
     getChildContext() {
       return {
-        store: subspace((state => state[subAppKey]), subAppKey)(this.getStore()),
+        store: subspace(mapState(subAppKey), subAppKey)(this.getStore()),
       };
     }
     componentWillMount() {
       const store = this.getStore();
       store.dispatch(addReducer(reducer));
       store.dispatch(initializeReducer());
+      if (options.saga && (!sagaRunForSubAppKeyMap[subAppKey])) {
+        const subspacedSaga = subspaced(mapState(subAppKey), subAppKey)(options.saga);
+        store.runSaga(subspacedSaga);
+        sagaRunForSubAppKeyMap[subAppKey] = true;
+      }
     }
     getStore() {
       let store = this.context.store;
@@ -55,24 +78,37 @@ const subAppCreator = (subAppKey, WrappedComponent, reducer) => {
 
 
 const refined = (subAppKey, reducer, initialState) => (state, action) => {
-  let subState = state[subAppKey];
+  let subState = mapState(subAppKey)(state);
   if (subState === undefined) {
     subState = initialState;
   }
   if (subState === undefined) {
     subState = reducer(undefined, ACTION_INITIALIZE_REDUCER_TYPE);
   }
-  return {
+  const keys = subAppKey.split('.');
+  const resultState = {
     ...state,
-    [subAppKey]: ((action.type === ACTION_INITIALIZE_REDUCER_TYPE)
-      ? subState
-      : reducer(subState, action)),
   };
+  let parentState = resultState;
+  if (keys.length > 1) {
+    keys.splice(0, keys.length - 1).forEach((key) => {
+      if (parentState[key] === undefined) {
+        parentState[key] = {};
+      }
+      parentState = parentState[key];
+    });
+  }
+  if (action.type === ACTION_INITIALIZE_REDUCER_TYPE) {
+    parentState[keys[0]] = subState;
+  } else {
+    parentState[keys[0]] = reducer(subState, action);
+  }
+  return resultState;
 };
 
 const mapping = {};
 
-export const createAppFactory = (WrappedComponent, reducer, initialState) => (subAppKey) => {
+export const createAppFactory = (WrappedComponent, reducer, initialState, options = {}) => (subAppKey) => {
   if (subAppKey in mapping) {
     if (mapping[subAppKey].wrapped === WrappedComponent) {
       return mapping[subAppKey].subApp;
@@ -81,7 +117,7 @@ export const createAppFactory = (WrappedComponent, reducer, initialState) => (su
   }
   const namespacedReducer = namespaced(subAppKey)(reducer);
   const refinedReducer = refined(subAppKey, namespacedReducer, initialState);
-  const subApp = subAppCreator(subAppKey, WrappedComponent, refinedReducer);
+  const subApp = subAppCreator(subAppKey, WrappedComponent, refinedReducer, options);
   mapping[subAppKey] = {
     wrapped: WrappedComponent,
     subApp,
