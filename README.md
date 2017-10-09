@@ -26,7 +26,7 @@ in both reducer and `mapStateToProps` function.
 4) The location of sub-application's redux state inside main store is decided by the parent application.
 Sub-application doesn't need to worry about it.
 5) Parent app can use multiple isolated instances of sub-application at different places.
-
+6) Sub-application's saga can be attached and run dynamically.
 
 ## Install
 
@@ -123,12 +123,12 @@ import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import { enhancer } from 'react-redux-subapp';
+import { subAppEnhancer } from 'react-redux-subapp';
 
 import { CounterApp as Counter } from 'counter-app';
 
 
-const store = createStore((state => state), {}, enhancer);
+const store = createStore((state => state), {}, subAppEnhancer);
 
 ReactDOM.render((
   <Provider store={store}>
@@ -156,10 +156,11 @@ It used the `counter` key in main redux store because it was specified while cre
 ## Reference
 This package provides two objects:
 
-#### 1) `createAppFactory(component, reducer, [initialState])`
+#### 1) `createAppFactory(component, reducer, initialState, options = {})`
 
-Creates app factory provided component, reducer and initialState (optional).
+Creates app factory provided component, reducer, initialState and options. initialState and options are optional.
 If initialState is not provided then reducer must have it as default argument against `state` parameter.
+If the sub app works on saga then it can be specified in options' `saga` key.
 
 ```
 const appFactory = createAppFactory(Component, reducer, initialState);
@@ -171,7 +172,7 @@ Which again is used to create App instances by providing the `subAppKey` as argu
 const ComponentApp = appFactory(subAppKey);
 ```
 
-Currently the `subAppKey` is just a string.
+`subAppKey` is a string. The string can contain `.` character to specify nesting of keys in store.
 
 The ComponentApp can be used as a component while rendering.
 
@@ -179,22 +180,22 @@ The parent app can also create single/mutiple ComponentApp from appFactory in it
 where to keep their state in global redux store.
 
 
-#### 2) `enhancer`
+#### 2) `subAppEnhancer`
 
 Put it as a third argument while creating Redux store in parent app.
 
 E.g.
 
 ```
-import { enhancer } from 'react-redux-subapp';
-const store = createStore(parentReducer, initialState, enhancer);
+import { subAppEnhancer } from 'react-redux-subapp';
+const store = createStore(parentReducer, initialState, subAppEnhancer);
 ```
 
 If you are using other enhancers or applyMiddleware, then compose the enhancers into one.
 
 ```
 import { createStore, applyMiddleware, compose } from 'redux';
-import { enhancer as subAppEnhancer } from 'react-redux-subapp';
+import { subAppEnhancer } from 'react-redux-subapp';
 
 const applyEnhancer = applyMiddleware(middleware1, middleware2);
 const enhancer = compose(subAppEnhancer, applyEnhancer);
@@ -203,7 +204,7 @@ const store = createStore(parentReducer, initialState, enhancer);
 
 ## An example of dynamic import
 
-**parent app's index.js**
+**parent app's index.js** 
 ```
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -211,10 +212,10 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
-import { enhancer } from 'react-redux-subapp';
+import { subAppEnhancer } from 'react-redux-subapp';
 
 
-const store = createStore((state => state), {}, enhancer);
+const store = createStore((state => state), {}, subAppEnhancer);
 
 class CounterApps extends React.Component {
   constructor() {
@@ -269,6 +270,47 @@ The store's state after components mount will look like:
     }
 }
 ```
+
+## How to use it with Saga?
+
+**child app's index.js**
+
+You need to put sub application's saga generator function in 4th argument (`options`) of `createAppFactory` as follows:
+```
+import { counterSaga } from './saga';
+
+export const counterAppFactory = createAppFactory(
+  Counter, reducer, initialState, {
+    saga: counterSaga,
+  }); 
+```
+
+**parent app's index.js**
+
+Install redux-subspace-saga package too along with redux-saga.
+```
+npm install -S redux-subspace-saga
+```
+
+And import `createSagaMiddleware` from redux-subspace-saga instead of redux-saga.
+You would have to use `subAppEnhancer.withOptions(options)` form instead of just `subAppEnhancer`.
+```
+import { createStore, applyMiddleware, compose } from 'redux';
+import { subAppEnhancer } from 'react-redux-subapp';
+import createSagaMiddleware from 'redux-subspace-saga';
+
+const sagaMiddleware = createSagaMiddleware();
+const applyEnhancer = applyMiddleware(sagaMiddleware);
+// Here you need to specify sagaMiddleware to subAppEnhancer
+const subAppEnhancerInstance = subAppEnhancer.withOptions({
+  sagaMiddleware: sagaMiddleware,
+});
+const enhancer = compose(applyEnhancer, subAppEnhancerInstance);
+const store = createStore((state => state), {}, enhancer);
+```
+
+That's it.
+
 
 ## Anti-patterns
 
