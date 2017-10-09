@@ -1,6 +1,6 @@
 {
   "name": "react-redux-subapp",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Create pluggable sub applications for React & Redux.",
   "main": "lib/index.js",
   "scripts": {
