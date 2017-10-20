@@ -82,9 +82,6 @@ const refined = (subAppKey, reducer, initialState) => (state, action) => {
   if (subState === undefined) {
     subState = initialState;
   }
-  if (subState === undefined) {
-    subState = reducer(undefined, ACTION_INITIALIZE_REDUCER_TYPE);
-  }
   const keys = subAppKey.split('.');
   const resultState = {
     ...state,
@@ -98,11 +95,7 @@ const refined = (subAppKey, reducer, initialState) => (state, action) => {
       parentState = parentState[key];
     });
   }
-  if (action.type === ACTION_INITIALIZE_REDUCER_TYPE) {
-    parentState[keys[0]] = subState;
-  } else {
-    parentState[keys[0]] = reducer(subState, action);
-  }
+  parentState[keys[0]] = reducer(subState, action);
   return resultState;
 };
 
