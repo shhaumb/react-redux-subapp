@@ -4,29 +4,23 @@ Create pluggable React/Redux sub-applications.
 
 ## Why?
 
-When we have to use a React/Redux sub-application inside another React/Redux application,
-there are multiple entrypoints inside the sub-application (i.e. component, reducer, initial-state)
-which need to be composed by the parent application.
+When we have to use a React/Redux sub-application inside another React/Redux application, there are multiple entrypoints inside the sub-application (i.e. component, reducer, initial-state) which need to be composed by the parent application.  
 It breaks the single place composibility nature provided by vanilla React architecture.
-Also, this situation complicates if we want to dynamically import the sub-application's module (for code splitting purpose)
-because reducer provided by sub-application needs be added dynamically to make it work.
+Also, this situation complicates if we want to dynamically import the sub-application's module (for code splitting purpose) because reducer provided by sub-application needs be added dynamically to make it work.  
 This package mitigates these problems.
 
-There is also a concern of state isolation for sub applications, which can be solved by having multiple stores.
-Using this package, we won't need to create multiple stores for Redux in a single application and
-yet acheive state isolation. Let there be only single source of truth.
+There is also a concern of state isolation for sub applications, which can be solved by having multiple stores.  
+Using this package, we won't need to create multiple stores for Redux in a single application and still achieve state isolation. Let there be only single source of truth.
 
 ## Features
 
-1) Provide single entrypoint for sub-application. Just use the component inside parent application.
-Associated reducer and initial-state are taken care of automatically.
-2) Isolate state access for sub-application. Sub-application doesn't get access to parent store's whole state
-in both reducer and `mapStateToProps` function.
-3) In case of code splitting (dynamic imports), reducer is added dynamically to parent application.
-4) The location of sub-application's redux state inside main store is decided by the parent application.
-Sub-application doesn't need to worry about it.
-5) Parent app can use multiple isolated instances of sub-application at different places.
-6) Sub-application's saga can be attached and run dynamically.
+1) Provide single entrypoint for sub-application. Just use the component inside the parent application.
+Associated reducer and initial-state are automatically taken care of.
+2) Isolate state access for sub-application. The Sub-application doesn't get access to the parent store's whole state in both the reducer and the `mapStateToProps` function.
+3) In case of code splitting (dynamic imports), the reducer is added dynamically to the parent application.
+4) The location of sub-application's redux state inside the main store is decided by the parent application. The Sub-application doesn't need to worry about it.
+5) The Parent app can use multiple isolated instances of sub-application at different places.
+6) The Sub-application's saga can be attached and run dynamically.
 
 ## Install
 
@@ -318,11 +312,9 @@ That's it.
 
 ## Anti-patterns
 
-Don't create mutiple `ComponentApp` objects from `appFactory` just because you need to render those
+Don't create multiple `ComponentApp` objects from `appFactory` just because you need to render those
 in different components. The single `ComponentApp` created can be rendered anywhere. So it is advised to create a
-sub-application's `ComponentApp` statically inside the parent app and use it everywhere. Design sub-application's component
-so that it can take some unique identifier prop from parent and use a part of its own sub-state for
-given identifier.
+sub-application's `ComponentApp` statically inside the parent app and use it everywhere. Design the sub-application's components so that they can take some unique identifier prop from the parent and use a part of their own sub-state for any given identifier.
 
 Creating mutiple `ComponentApp`s (dynamically) will cause a long chain of reducers, which can slow down your app.
 
