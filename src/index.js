@@ -54,7 +54,7 @@ const subAppCreator = (subAppKey, WrappedComponent, reducer, options) => {
       }
     }
     getStore() {
-      let store = this.context.store;
+      let { store } = this.context;
       if (store.rootStore) {
         store = store.rootStore;
       }
@@ -64,7 +64,7 @@ const subAppCreator = (subAppKey, WrappedComponent, reducer, options) => {
       return <WrappedComponent {...this.props} />;
     }
   }
-  SubApp.PropTypes = {};
+  SubApp.propTypes = {};
   SubApp.contextTypes = {
     store: PropTypes.object.isRequired,
   };
